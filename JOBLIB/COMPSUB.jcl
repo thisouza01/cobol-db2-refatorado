@@ -1,0 +1,44 @@
+//CMPDB201 JOB ('J906NPD160911'),TSO.&SYSUID,
+//    REGION=0M,NOTIFY=&SYSUID,
+//    MSGCLASS=A,MSGLEVEL=1,CLASS=A
+//***************************************************************
+//*    JCL PARA COMPILAR E LINKEDITAR SUBPROGRAMAS (CALL)       *
+//***************************************************************
+// SET MOD=CONTNOME
+//***************************************************************
+//*       COMPILACAO (COB) COM O UTILITARIO IGYCRCTL            *
+//***************************************************************
+//COB    EXEC PGM=IGYCRCTL,REGION=2M,
+//             PARM='BUFSIZE(32760),EXIT(NOPRTEXIT),LIB'
+//STEPLIB  DD DISP=SHR,DSN=IGY420.SIGYCOMP
+//         DD DSN=IBMUSER.THIAGO.BOOKLIB,DISP=SHR
+//         DD DSN=IBMUSER.THIAGO.COPYLIB,DISP=SHR
+//SYSLIB   DD DSN=DFH410.CICS.SDFHSAMP,DISP=SHR
+//         DD DSN=DFH410.CICS.SDFHCOB,DISP=SHR
+//         DD DSN=IBMUSER.THIAGO.COBLIB,DISP=SHR
+//SYSIN    DD DSN=IBMUSER.THIAGO.COBLIB(&MOD),DISP=SHR
+//SYSLIN   DD DSN=&&LOADSET,DISP=(,PASS),
+//     UNIT=SYSDA,SPACE=(180,(250,100))
+//SYSUT1   DD UNIT=SYSDA,SPACE=(960,(550,100))
+//SYSUT2   DD UNIT=SYSDA,SPACE=(960,(550,100))
+//SYSUT3   DD UNIT=SYSDA,SPACE=(960,(550,100))
+//SYSUT4   DD UNIT=SYSDA,SPACE=(960,(550,100))
+//SYSUT5   DD UNIT=SYSDA,SPACE=(960,(550,100))
+//SYSUT6   DD UNIT=SYSDA,SPACE=(960,(550,100))
+//SYSUT7   DD UNIT=SYSDA,SPACE=(960,(550,100))
+//***************************************************************
+//*   LINKEDICAO (LKED) COM O UTILITARIO IEWL                   *
+//***************************************************************
+//LKED   EXEC PGM=IEWL,REGION=2M,
+//        PARM='XREF',COND=(5,LT,COB)
+//SYSLIB   DD DSN=DSN910.SDSNLOAD,DISP=SHR
+//         DD DSN=IBMUSER.THIAGO.USERLOAD,DISP=SHR
+//         DD DSN=IBMUSER.THIAGO.COBLIB,DISP=SHR
+//         DD DSN=SYS1.SIEALNKE,DISP=SHR
+//         DD DSN=CEE.SCEELKED,DISP=SHR
+//SYSLMOD  DD DSN=IBMUSER.THIAGO.USERLOAD(&MOD),DISP=SHR
+//SYSUT1   DD UNIT=SYSDA,DCB=BLKSIZE=1024,
+//        SPACE=(1024,(200,20))
+//SYSPRINT DD SYSOUT=*
+//SYSLIN   DD DSN=&&LOADSET,DISP=(OLD,DELETE)
+//***************************************************************
