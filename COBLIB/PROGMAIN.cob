@@ -1,5 +1,5 @@
         IDENTIFICATION DIVISION.
-        PROGRAM-ID.    EAD71918.
+        PROGRAM-ID.    PROGMAIN.
         AUTHOR.        THIAGO.
       **************************************************
       * INCLUSAO, EXCLUSAO E ALTERACAO DE FUNCIONARIOS *
@@ -57,7 +57,9 @@
        202-INCLUSAO.
           MOVE WK-CODFUN-ACCEPT     TO DB2-CODFUN.
           MOVE WK-NOMEFUN-ACCEPT    TO DB2-NOMEFUN-TEXT.
-          PERFORM 205-CONTA-NOMEFUN.
+      *   PERFORM 205-CONTA-NOMEFUN.
+      *   Conta quantidade de caracteres e atualiza DB2-NOMEFUN-LEN.
+          CALL "CONTNOME"           USING DB2-NOMEFUN.
           MOVE WK-SALARIOFUN-ACCEPT TO DB2-SALARIOFUN.
           MOVE WK-DEPTOFUN-ACCEPT   TO DB2-DEPTOFUN.
           MOVE WK-ADMISSFUN-ACCEPT  TO DB2-ADMISSFUN.
@@ -133,13 +135,6 @@
           IF   WK-EMAILFUN-ACCEPT   NOT = SPACES
              PERFORM 215-ALTERA-EMAIL
           END-IF.
-       *
-       205-CONTA-NOMEFUN.
-          MOVE 30 TO DB2-NOMEFUN-LEN.
-          PERFORM VARYING WK-POSICAO FROM 30 BY -1
-                   UNTIL DB2-NOMEFUN-TEXT(WK-POSICAO:1) NOT EQUAL SPACES
-             SUBTRACT 1 FROM DB2-NOMEFUN-LEN
-          END-PERFORM.
       *
        206-CONTA-EMAILFUN.
           MOVE 30 TO DB2-EMAILFUN-LEN.
@@ -150,7 +145,8 @@
       *
        210-ALTERA-NOME.
           MOVE WK-NOMEFUN-ACCEPT    TO DB2-NOMEFUN-TEXT.
-          PERFORM 205-CONTA-NOMEFUN.
+      *   PERFORM 205-CONTA-NOMEFUN.
+          CALL "CONTNOME"                 USING DB2-NOMEFUN.
           EXEC SQL
              UPDATE EAD719.FUNCIONARIOS
                    SET NOMEFUN = :DB2-NOMEFUN
