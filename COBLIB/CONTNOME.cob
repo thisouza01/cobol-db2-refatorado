@@ -8,11 +8,12 @@
        77  WK-POSICAO              PIC 99    VALUE ZEROS.
       *
        LINKAGE                               SECTION.
-       01  LK-NOMEFUN-LEN          PIC 9(30).
-       01  LK-NOMEFUN-TEXT         PIC A(30).
+       01  LK-NOMEFUN.
+             05  LK-NOMEFUN-LEN          PIC S9(04).
+             05  LK-NOMEFUN-TEXT         PIC X(30).
       *
-       PROCEDURE                             DIVISION USING LK-NOMEFUN-LEN
-                                                            LK-NOMEFUN-TEXT.
+       PROCEDURE                             DIVISION USING LK-NOMEFUN.
+      
        PERFORM CONTA-NOME.
        GOBACK.
 
