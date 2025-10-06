@@ -57,7 +57,6 @@
        202-INCLUSAO.
           MOVE WK-CODFUN-ACCEPT     TO DB2-CODFUN.
           MOVE WK-NOMEFUN-ACCEPT    TO DB2-NOMEFUN-TEXT.
-      *   PERFORM 205-CONTA-NOMEFUN.
       *   Conta quantidade de caracteres e atualiza DB2-NOMEFUN-LEN.
           CALL "CONTNOME"           USING DB2-NOMEFUN.
           MOVE WK-SALARIOFUN-ACCEPT TO DB2-SALARIOFUN.
@@ -65,7 +64,8 @@
           MOVE WK-ADMISSFUN-ACCEPT  TO DB2-ADMISSFUN.
           MOVE WK-IDADEFUN-ACCEPT   TO DB2-IDADEFUN.
           MOVE WK-EMAILFUN-ACCEPT   TO DB2-EMAILFUN-TEXT.
-          PERFORM 206-CONTA-EMAILFUN.
+      *   Conta quantidade de caracteres e atualiza DB2-EMAILFUN-LEN.
+          CALL "CONTMAIL"           USING DB2-EMAILFUN.
           EXEC SQL
              INSERT INTO EAD719.FUNCIONARIOS
              VALUES(:DB2-CODFUN,
@@ -136,16 +136,9 @@
              PERFORM 215-ALTERA-EMAIL
           END-IF.
       *
-       206-CONTA-EMAILFUN.
-          MOVE 30 TO DB2-EMAILFUN-LEN.
-          PERFORM VARYING WK-POSICAO FROM 30 BY -1
-                UNTIL DB2-EMAILFUN-TEXT(WK-POSICAO:1) NOT EQUAL SPACES
-             SUBTRACT 1 FROM DB2-EMAILFUN-LEN
-          END-PERFORM.
-      *
        210-ALTERA-NOME.
           MOVE WK-NOMEFUN-ACCEPT    TO DB2-NOMEFUN-TEXT.
-      *   PERFORM 205-CONTA-NOMEFUN.
+      *   Conta quantidade de caracteres e atualiza DB2-NOMEFUN-LEN.
           CALL "CONTNOME"                 USING DB2-NOMEFUN.
           EXEC SQL
              UPDATE EAD719.FUNCIONARIOS
@@ -261,7 +254,8 @@
       *
        215-ALTERA-EMAIL.
           MOVE WK-EMAILFUN-ACCEPT  TO DB2-EMAILFUN.
-          PERFORM 206-CONTA-EMAILFUN.
+      *   Conta quantidade de caracteres e atualiza DB2-EMAILFUN-LEN.
+          CALL "CONTMAIL"           USING DB2-EMAILFUN.
           EXEC SQL
              UPDATE EAD719.FUNCIONARIOS
                    SET EMAILFUN = :DB2-EMAILFUN
