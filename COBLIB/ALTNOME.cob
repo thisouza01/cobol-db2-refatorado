@@ -9,9 +9,6 @@
            DECIMAL-POINT IS COMMA.
       *
        DATA                          DIVISION.
-       LINKAGE                       SECTION.
-       01 LK-NOMEFUN-ACCEPT          PIC X(30).
-       01 LK-CODFUN                  PIC X(04).
       *
        WORKING-STORAGE               SECTION.
            EXEC SQL
@@ -23,7 +20,12 @@
       *
        77 RETORNO-SQLCODE            PIC -999   VALUE ZEROS.
       *
-       PROCEDURE                     DIVISION.
+       LINKAGE                       SECTION.
+       01 LK-NOMEFUN-ACCEPT          PIC X(30).
+       01 LK-CODFUN                  PIC X(04).
+      *
+       PROCEDURE                     DIVISION USING LK-NOMEFUN-ACCEPT,
+                                                    LK-CODFUN.
       *
        PERFORM ALTERA-NOME.
        GOBACK.
@@ -48,6 +50,6 @@
               DISPLAY 'ERRO ' RETORNO-SQLCODE
                       ' NO COMANDO UPDATE DO NOME'
               MOVE 12 TO RETURN-CODE
-              GOBACK.
+              GOBACK
            END-EVALUATE.
       
