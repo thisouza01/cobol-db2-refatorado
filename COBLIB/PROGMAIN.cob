@@ -118,7 +118,8 @@
        204-ALTERACAO.
           MOVE WK-CODFUN-ACCEPT     TO DB2-CODFUN.
           IF   WK-NOMEFUN-ACCEPT    NOT = SPACES
-             PERFORM 210-ALTERA-NOME
+             CALL "ALTNOME" USING DB2-CODFUN,
+                                  WK-NOMEFUN-ACCEPT.
           END-IF.
           IF   WK-SALARIOFUN-ACCEPT IS NUMERIC
              PERFORM 211-ALTERA-SALARIO
@@ -135,30 +136,6 @@
           IF   WK-EMAILFUN-ACCEPT   NOT = SPACES
              PERFORM 215-ALTERA-EMAIL
           END-IF.
-      *
-       210-ALTERA-NOME.
-          MOVE WK-NOMEFUN-ACCEPT    TO DB2-NOMEFUN-TEXT.
-      *   Conta quantidade de caracteres e atualiza DB2-NOMEFUN-LEN.
-          CALL "CONTNOME"                 USING DB2-NOMEFUN.
-          EXEC SQL
-             UPDATE EAD719.FUNCIONARIOS
-                   SET NOMEFUN = :DB2-NOMEFUN
-                   WHERE CODFUN = :DB2-CODFUN
-          END-EXEC.
-          EVALUATE SQLCODE
-             WHEN 0
-                   DISPLAY 'NOME DO FUNCIONARIO ' DB2-CODFUN
-                         ' FOI ALTERADO PARA ' DB2-NOMEFUN-TEXT
-             WHEN 100
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' NAO EXISTE!'
-             WHEN OTHER
-                   MOVE SQLCODE TO WK-SQLCODE-EDIT
-                   DISPLAY 'ERRO ' WK-SQLCODE-EDIT
-                         ' NO COMANDO UPDATE'
-                   MOVE 12 TO RETURN-CODE
-                   STOP RUN
-          END-EVALUATE.
       *
        211-ALTERA-SALARIO.
           MOVE WK-SALARIOFUN-ACCEPT    TO DB2-SALARIOFUN.
