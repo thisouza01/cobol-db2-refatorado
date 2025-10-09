@@ -134,7 +134,8 @@
              PERFORM 214-ALTERA-IDADE
           END-IF.
           IF   WK-EMAILFUN-ACCEPT   NOT = SPACES
-             PERFORM 215-ALTERA-EMAIL
+             CALL "ALTEMAIL" USING DB2-CODFUN,
+                                   WK-EMAILFUN-ACCEPT.
           END-IF.
       *
        211-ALTERA-SALARIO.
@@ -225,30 +226,6 @@
                    MOVE SQLCODE TO WK-SQLCODE-EDIT
                    DISPLAY 'ERRO ' WK-SQLCODE-EDIT
                          ' NO COMANDO UPDATE DA IDADE'
-                   MOVE 12 TO RETURN-CODE
-                   STOP RUN
-          END-EVALUATE.
-      *
-       215-ALTERA-EMAIL.
-          MOVE WK-EMAILFUN-ACCEPT  TO DB2-EMAILFUN.
-      *   Conta quantidade de caracteres e atualiza DB2-EMAILFUN-LEN.
-          CALL "CONTMAIL"           USING DB2-EMAILFUN.
-          EXEC SQL
-             UPDATE EAD719.FUNCIONARIOS
-                   SET EMAILFUN = :DB2-EMAILFUN
-                   WHERE CODFUN = :DB2-CODFUN
-          END-EXEC.
-          EVALUATE SQLCODE
-             WHEN 0
-                   DISPLAY 'EMAIL DO FUNCIONARIO ' DB2-CODFUN
-                         ' FOI ALTERADO PARA ' DB2-EMAILFUN
-             WHEN 100
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' NAO EXISTE!'
-             WHEN OTHER
-                   MOVE SQLCODE TO WK-SQLCODE-EDIT
-                   DISPLAY 'ERRO ' WK-SQLCODE-EDIT
-                         ' NO COMANDO UPDATE DA EMAIL'
                    MOVE 12 TO RETURN-CODE
                    STOP RUN
           END-EVALUATE.
