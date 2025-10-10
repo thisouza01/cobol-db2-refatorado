@@ -24,8 +24,8 @@
        01 LK-NOMEFUN-ACCEPT          PIC X(30).
        01 LK-CODFUN                  PIC X(04).
       *
-       PROCEDURE                     DIVISION USING LK-NOMEFUN-ACCEPT,
-                                                    LK-CODFUN.
+       PROCEDURE                     DIVISION USING LK-CODFUN,
+                                                    LK-NOMEFUN-ACCEPT.
       *
        PERFORM ALTERA-NOME.
        GOBACK.
