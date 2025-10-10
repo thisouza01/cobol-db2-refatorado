@@ -24,8 +24,8 @@
        01 LK-EMAILFUN-ACCEPT         PIC X(30).
        01 LK-CODFUN                  PIC X(04).
       *
-       PROCEDURE                     DIVISION USING LK-EMAILFUN-ACCEPT,
-                                                    LK-CODFUN.
+       PROCEDURE                     DIVISION USING LK-CODFUN,
+                                                    LK-EMAILFUN-ACCEPT.
       *
        PERFORM ALTERA-EMAIL.
        GOBACK.
