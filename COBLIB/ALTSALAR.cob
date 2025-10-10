@@ -24,8 +24,8 @@
        01 LK-SALARIOFUN-ACCEPT       PIC 9(06)V99.
        01 LK-CODFUN                  PIC X(04).
       *
-       PROCEDURE                     DIVISION USING LK-SALARIOFUN-ACCEPT,
-                                                    LK-CODFUN.
+       PROCEDURE                     DIVISION USING LK-CODFUN,
+                                                    LK-SALARIOFUN-ACCEPT.
       *
        PERFORM ALTERA-SALARIO.
        GOBACK.
