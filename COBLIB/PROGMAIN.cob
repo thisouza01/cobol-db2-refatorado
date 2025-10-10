@@ -122,10 +122,12 @@
                                   WK-NOMEFUN-ACCEPT.
           END-IF.
           IF   WK-SALARIOFUN-ACCEPT IS NUMERIC
-             PERFORM 211-ALTERA-SALARIO
+             CALL "ALTSALAR" USING DB2-CODFUN,
+                                   WK-SALARIOFUN-ACCEPT.          
           END-IF.
           IF   WK-DEPTOFUN-ACCEPT   NOT = SPACES
-             PERFORM 212-ALTERA-DEPARTAMENTO
+             CALL "ALTDEPTO" USING DB2-CODFUN,
+                                   WK-DEPTOFUN-ACCEPT.          
           END-IF.
           IF   WK-ADMISSFUN-ACCEPT  NOT = SPACES
              PERFORM 213-ALTERA-ADMISSAO
@@ -137,54 +139,6 @@
              CALL "ALTEMAIL" USING DB2-CODFUN,
                                    WK-EMAILFUN-ACCEPT.
           END-IF.
-      *
-       211-ALTERA-SALARIO.
-          MOVE WK-SALARIOFUN-ACCEPT    TO DB2-SALARIOFUN.
-          EXEC SQL
-             UPDATE EAD719.FUNCIONARIOS
-                   SET SALARIOFUN = :DB2-SALARIOFUN
-                   WHERE CODFUN = :DB2-CODFUN
-          END-EXEC.
-          EVALUATE SQLCODE
-             WHEN 0
-                   MOVE WK-SALARIOFUN-ACCEPT TO WK-SALARIO-EDIT
-                   DISPLAY 'SALARIO DO FUNCIONARIO ' DB2-CODFUN
-                         ' FOI ALTERADO PARA ' WK-SALARIO-EDIT
-             WHEN 100
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' NAO EXISTE!'
-             WHEN OTHER
-                   MOVE SQLCODE TO WK-SQLCODE-EDIT
-                   DISPLAY 'ERRO ' WK-SQLCODE-EDIT
-                         ' NO COMANDO UPDATE DO SALARIO'
-                   MOVE 12 TO RETURN-CODE
-                   STOP RUN
-          END-EVALUATE.
-      *
-       212-ALTERA-DEPARTAMENTO.
-          MOVE WK-DEPTOFUN-ACCEPT TO DB2-DEPTOFUN.
-          EXEC SQL
-             UPDATE EAD719.FUNCIONARIOS
-                   SET DEPTOFUN = :DB2-DEPTOFUN
-                   WHERE CODFUN = :DB2-CODFUN
-          END-EXEC.
-          EVALUATE SQLCODE
-             WHEN 0
-                   DISPLAY 'DEPARTAMENTO DO FUNCIONARIO ' DB2-CODFUN
-                         ' FOI ALTERADO PARA ' DB2-DEPTOFUN
-             WHEN 100
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' NAO EXISTE!'
-             WHEN -530
-                   DISPLAY 'DEPARTAMENTO ' WK-DEPTOFUN-ACCEPT
-                         ' NAO EXISTE!'
-             WHEN OTHER
-                   MOVE SQLCODE TO WK-SQLCODE-EDIT
-                   DISPLAY 'ERRO ' WK-SQLCODE-EDIT
-                         ' NO COMANDO UPDATE DO DEPARTAMENTO'
-                   MOVE 12 TO RETURN-CODE
-                   STOP RUN
-          END-EVALUATE.
       *
        213-ALTERA-ADMISSAO.
           MOVE WK-ADMISSFUN-ACCEPT  TO DB2-ADMISSFUN.
