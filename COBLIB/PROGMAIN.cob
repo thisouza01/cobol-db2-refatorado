@@ -130,59 +130,17 @@
                                    WK-DEPTOFUN-ACCEPT.          
           END-IF.
           IF   WK-ADMISSFUN-ACCEPT  NOT = SPACES
-             PERFORM 213-ALTERA-ADMISSAO
+             CALL "ALTADMIS" USING DB2-CODFUN,
+                                   WK-ADMISSFUN-ACCEPT.  
           END-IF.
           IF   WK-IDADEFUN-ACCEPT   IS NUMERIC
-             PERFORM 214-ALTERA-IDADE
+             CALL "ALTIDADE" USING DB2-CODFUN,
+                                   WK-IDADEFUN-ACCEPT.  
           END-IF.
           IF   WK-EMAILFUN-ACCEPT   NOT = SPACES
              CALL "ALTEMAIL" USING DB2-CODFUN,
                                    WK-EMAILFUN-ACCEPT.
           END-IF.
-      *
-       213-ALTERA-ADMISSAO.
-          MOVE WK-ADMISSFUN-ACCEPT  TO DB2-ADMISSFUN.
-          EXEC SQL
-             UPDATE EAD719.FUNCIONARIOS
-                   SET ADMISSFUN = :DB2-ADMISSFUN
-                   WHERE CODFUN = :DB2-CODFUN
-          END-EXEC.
-          EVALUATE SQLCODE
-             WHEN 0
-                   DISPLAY 'ADMISSAO DO FUNCIONARIO ' DB2-CODFUN
-                         ' FOI ALTERADO PARA ' DB2-DEPTOFUN
-             WHEN 100
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' NAO EXISTE!'
-             WHEN OTHER
-                   MOVE SQLCODE TO WK-SQLCODE-EDIT
-                   DISPLAY 'ERRO ' WK-SQLCODE-EDIT
-                         ' NO COMANDO UPDATE DA ADMISSAO'
-                   MOVE 12 TO RETURN-CODE
-                   STOP RUN
-          END-EVALUATE.
-      *
-       214-ALTERA-IDADE.
-          MOVE WK-IDADEFUN-ACCEPT  TO DB2-IDADEFUN.
-          EXEC SQL
-             UPDATE EAD719.FUNCIONARIOS
-                   SET IDADEFUN = :DB2-IDADEFUN
-                   WHERE CODFUN = :DB2-CODFUN
-          END-EXEC.
-          EVALUATE SQLCODE
-             WHEN 0
-                   DISPLAY 'IDADE DO FUNCIONARIO ' DB2-CODFUN
-                         ' FOI ALTERADO PARA ' DB2-IDADEFUN
-             WHEN 100
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' NAO EXISTE!'
-             WHEN OTHER
-                   MOVE SQLCODE TO WK-SQLCODE-EDIT
-                   DISPLAY 'ERRO ' WK-SQLCODE-EDIT
-                         ' NO COMANDO UPDATE DA IDADE'
-                   MOVE 12 TO RETURN-CODE
-                   STOP RUN
-          END-EVALUATE.
       *******************************************************
        300-LER-FUNCIONARIOS SECTION.
        301-LER-FUNCIONARIOS.
