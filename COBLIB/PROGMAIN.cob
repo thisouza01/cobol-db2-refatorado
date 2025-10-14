@@ -21,7 +21,6 @@
            EXEC SQL
               INCLUDE SQLCA
            END-EXEC.
-       77  WK-SQLCODE-EDIT           PIC -999        VALUE ZEROS.
        
        COPY CPYACEP.
       *

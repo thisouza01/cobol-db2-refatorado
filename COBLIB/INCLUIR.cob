@@ -11,6 +11,8 @@
        DATA                          DIVISION.
       *
        WORKING-STORAGE               SECTION.
+      * Variáveis de controle SQL 
+       COPY SQLVARS.
       *
        LINKAGE                       SECTION.
        01  LK-ACCEPT.
@@ -25,6 +27,8 @@
       *
        PROCEDURE                     DIVISION USING LK-ACCEPT,
                                                     LK-EMAILFUN-ACCEPT.
+      * Tratamento de SQLCODE 
+       COPY SQLTREAT.                                             
       *
        PERFORM INCLUI-FUNCIONARIO.
        GOBACK.
@@ -53,20 +57,21 @@
                       :DB2-EMAILFUN)
           END-EXEC.
 
-          EVALUATE SQLCODE
-             WHEN 0
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' FOI INCLUIDO!'
-             WHEN -803
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' JA EXISTE!'
-             WHEN -530
-                   DISPLAY 'DEPARTAMENTO ' DB2-DEPTOFUN
-                         ' NAO EXISTE!'
-             WHEN OTHER
-                   MOVE SQLCODE TO WK-SQLCODE-EDIT
-                   DISPLAY 'ERRO ' WK-SQLCODE-EDIT
-                         ' NO COMANDO INSERT'
-                   MOVE 12 TO RETURN-CODE
-                   STOP RUN
-          END-EVALUATE.       
+          PERFORM TRATA-SQLCODE.
+
+          EVALUATE WS-SQL-STATUS
+              WHEN 'SUCESSO'
+                  EXEC SQL COMMIT END-EXEC                                
+                  DISPLAY 'FUNCIONARIO ' DB2-CODFUN 
+                          ' INCLUIDO COM SUCESSO!'
+              WHEN 'JA-EXISTE'
+                  DISPLAY 'FUNCIONARIO ' DB2-CODFUN 
+                          ' JA EXISTE!'
+              WHEN 'FK-INVALIDA'
+                  DISPLAY 'DEPARTAMENTO ' DB2-DEPTOFUN 
+                          ' NAO EXISTE!'
+              WHEN 'NAO-ENCONTRADO'
+                  DISPLAY 'ERRO NA VALIDACAO DOS DADOS'
+              WHEN OTHER
+                  CONTINUE
+          END-EVALUATE.

@@ -11,6 +11,8 @@
        DATA                          DIVISION.
       *
        WORKING-STORAGE               SECTION.
+      * Variáveis de controle SQL 
+       COPY SQLVARS.       
       *
        LINKAGE                       SECTION.
        01  LK-CODFUN-ACCEPT          PIC X(4). 
@@ -22,23 +24,20 @@
       *
        EXCLUI-FUNCIONARIO.
            MOVE LK-CODFUN-ACCEPT     TO DB2-CODFUN.
-
            EXEC SQL
                DELETE FROM EAD719.FUNCIONARIOS
                    WHERE CODFUN = :DB2-CODFUN
            END-EXEC.
-           
-           EVALUATE SQLCODE
-               WHEN 0
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' FOI EXCLUIDO!'
-               WHEN 100
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' NAO EXISTE!'
-               WHEN OTHER
-                   MOVE SQLCODE TO WK-SQLCODE-EDIT
-                   DISPLAY 'ERRO ' WK-SQLCODE-EDIT
-                         ' NO COMANDO DELETE'
-                   MOVE 12 TO RETURN-CODE
-                   STOP RUN
-           END-EVALUATE. 
+           PERFORM TRATA-SQLCODE.
+
+           EVALUATE WS-SQL-STATUS
+              WHEN 'SUCESSO'
+                  EXEC SQL COMMIT END-EXEC    
+                  DISPLAY 'FUNCIONARIO ' DB2-CODFUN 
+                          ' ALTERADO COM SUCESSO!'
+              WHEN 'NAO-ENCONTRADO'
+                  DISPLAY 'ERRO NA VALIDACAO DOS DADOS'
+              WHEN OTHER
+                  CONTINUE
+           END-EVALUATE.
+      

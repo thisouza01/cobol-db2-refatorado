@@ -17,8 +17,8 @@
            EXEC SQL
                INCLUDE BOOKFUNC
            END-EXEC.
-      *
-       77 RETORNO-SQLCODE            PIC -999   VALUE ZEROS.
+      * Variáveis de controle SQL 
+       COPY SQLVARS.           
       *
        LINKAGE                       SECTION.
        01 LK-EMAILFUN-ACCEPT         PIC X(30).
@@ -26,30 +26,35 @@
       *
        PROCEDURE                     DIVISION USING LK-CODFUN,
                                                     LK-EMAILFUN-ACCEPT.
+      * Tratamento de SQLCODE 
+       COPY SQLTREAT.                                                           
       *
        PERFORM ALTERA-EMAIL.
        GOBACK.
       *
        ALTERA-EMAIL.
            MOVE LK-EMAILFUN-ACCEPT TO DB2-EMAILFUN-TEXT.
+      *   Conta quantidade de caracteres e atualiza DB2-EMAILFUN-LEN.     
            CALL "CONTMAIL" USING DB2-EMAILFUN.
            EXEC SQL
                UPDATE IBMUSER.FUNCIONARIOS
                SET EMAILFUN = :DB2-EMAILFUN
                      WHERE CODFUN = :LK-CODFUN
            END-EXEC.
-           EVALUATE SQLCODE
-           WHEN 0
-              DISPLAY 'EMAIL DO FUNCIONARIO ' LK-CODFUN
-                      ' FOI ALTERADO PARA ' DB2-EMAILFUN-TEXT
-           WHEN 100
-              DISPLAY 'FUNCIONARIO ' LK-CODFUN
-                      ' NAO EXISTE'
-           WHEN OTHER
-              MOVE SQLCODE TO RETORNO-SQLCODE
-              DISPLAY 'ERRO ' RETORNO-SQLCODE
-                      ' NO COMANDO UPDATE DO EMAIL'
-              MOVE 12 TO RETURN-CODE
-              GOBACK
+           PERFORM TRATA-SQLCODE.
+
+           EVALUATE WS-SQL-STATUS
+              WHEN 'SUCESSO'
+                  EXEC SQL COMMIT END-EXEC                                
+                  DISPLAY 'FUNCIONARIO ' DB2-CODFUN 
+                          ' ALTERADO COM SUCESSO!'
+              WHEN 'FK-INVALIDA'
+                  EXEC SQL ROLLBACK END-EXEC                          
+                  DISPLAY 'DEPARTAMENTO ' DB2-DEPTOFUN 
+                          ' NAO EXISTE!'
+              WHEN 'NAO-ENCONTRADO'
+                  DISPLAY 'ERRO NA VALIDACAO DOS DADOS'            
+              WHEN OTHER
+                  CONTINUE
            END-EVALUATE.
       
