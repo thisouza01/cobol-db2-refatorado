@@ -18,7 +18,9 @@
                INCLUDE BOOKFUNC
            END-EXEC.
       *
-       77 RETORNO-SQLCODE            PIC -999   VALUE ZEROS.
+       77  RETORNO-SQLCODE           PIC -999       VALUE ZEROS.
+       77  WK-SALARIO-EDIT           PIC ZZZ.ZZ9,99  VALUE ZEROS.
+
       *
        LINKAGE                       SECTION.
        01 LK-SALARIOFUN-ACCEPT       PIC 9(06)V99.
@@ -32,11 +34,15 @@
       *
        ALTERA-SALARIO.
            MOVE LK-SALARIOFUN-ACCEPT TO DB2-SALARIOFUN-TEXT.
+
            EXEC SQL
                UPDATE IBMUSER.FUNCIONARIOS
                SET SALARIOFUN = :DB2-SALARIOFUN
                      WHERE CODFUN = :LK-CODFUN
            END-EXEC.
+
+           MOVE LK-SALARIOFUN-ACCEPT TO WK-SALARIO-EDIT.
+
            EVALUATE SQLCODE
            WHEN 0
               DISPLAY 'SALARIO DO FUNCIONARIO ' LK-CODFUN
