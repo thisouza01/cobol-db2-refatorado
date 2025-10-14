@@ -21,9 +21,7 @@
            EXEC SQL
               INCLUDE SQLCA
            END-EXEC.
-       77  WK-SALARIO-EDIT           PIC ZZZ.ZZ9,99  VALUE ZEROS.
        77  WK-SQLCODE-EDIT           PIC -999        VALUE ZEROS.
-       77  WK-POSICAO                PIC 99          VALUE ZEROS.
        
        COPY CPYACEP.
       *
@@ -45,80 +43,16 @@
        201-PROCESSAR.
           EVALUATE WK-FUNCAO-ACCEPT
              WHEN 'I'
-                   PERFORM 202-INCLUSAO
+                   CALL "INCLUIR" USING WK-ACCEPT,
+                                         WK-EMAILFUN-ACCEPT
              WHEN 'E'
-                   PERFORM 203-EXCLUSAO
+                   CALL "EXCLUIR" USING WK-CODFUN-ACCEPT
              WHEN 'A'
                    CALL "ALTERAR" USING WK-ACCEPT,
                                         WK-EMAILFUN-ACCEPT
              WHEN OTHER
                    DISPLAY 'FUNCAO ' WK-FUNCAO-ACCEPT ' INVALIDA!'
           END-EVALUATE.
-      *
-       202-INCLUSAO.
-          MOVE WK-CODFUN-ACCEPT     TO DB2-CODFUN.
-          MOVE WK-NOMEFUN-ACCEPT    TO DB2-NOMEFUN-TEXT.
-      *   Conta quantidade de caracteres e atualiza DB2-NOMEFUN-LEN.
-          CALL "CONTNOME"           USING DB2-NOMEFUN.
-          MOVE WK-SALARIOFUN-ACCEPT TO DB2-SALARIOFUN.
-          MOVE WK-DEPTOFUN-ACCEPT   TO DB2-DEPTOFUN.
-          MOVE WK-ADMISSFUN-ACCEPT  TO DB2-ADMISSFUN.
-          MOVE WK-IDADEFUN-ACCEPT   TO DB2-IDADEFUN.
-          MOVE WK-EMAILFUN-ACCEPT   TO DB2-EMAILFUN-TEXT.
-      *   Conta quantidade de caracteres e atualiza DB2-EMAILFUN-LEN.
-          CALL "CONTMAIL"           USING DB2-EMAILFUN.
-          EXEC SQL
-             INSERT INTO EAD719.FUNCIONARIOS
-             VALUES(:DB2-CODFUN,
-                      :DB2-NOMEFUN,
-                      :DB2-SALARIOFUN,
-                      :DB2-DEPTOFUN,
-                      :DB2-ADMISSFUN,
-                      :DB2-IDADEFUN,
-                      :DB2-EMAILFUN)
-          END-EXEC.
-          EVALUATE SQLCODE
-             WHEN 0
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' FOI INCLUIDO!'
-             WHEN -803
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' JA EXISTE!'
-             WHEN -530
-                   DISPLAY 'DEPARTAMENTO ' DB2-DEPTOFUN
-                         ' NAO EXISTE!'
-             WHEN OTHER
-                   MOVE SQLCODE TO WK-SQLCODE-EDIT
-                   DISPLAY 'ERRO ' WK-SQLCODE-EDIT
-                         ' NO COMANDO INSERT'
-                   MOVE 12 TO RETURN-CODE
-                   STOP RUN
-          END-EVALUATE.
-      *
-       203-EXCLUSAO.
-          MOVE WK-CODFUN-ACCEPT     TO DB2-CODFUN.
-          EXEC SQL
-             DELETE FROM EAD719.FUNCIONARIOS
-                   WHERE CODFUN = :DB2-CODFUN
-          END-EXEC.
-          EVALUATE SQLCODE
-             WHEN 0
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' FOI EXCLUIDO!'
-             WHEN 100
-                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN
-                         ' NAO EXISTE!'
-             WHEN OTHER
-                   MOVE SQLCODE TO WK-SQLCODE-EDIT
-                   DISPLAY 'ERRO ' WK-SQLCODE-EDIT
-                         ' NO COMANDO DELETE'
-                   MOVE 12 TO RETURN-CODE
-                   STOP RUN
-          END-EVALUATE.
-      *******************************************************
-       300-LER-FUNCIONARIOS SECTION.
-       301-LER-FUNCIONARIOS.
-          EXIT.
       *******************************************************
        900-FINALIZAR SECTION.
        901-FINALIZAR.
