@@ -1,8 +1,8 @@
        IDENTIFICATION                DIVISION.
        PROGRAM-ID.                   ALTIDADE.
-      ********************************************************
+      *************************************************
       * PROGRAMA DE ALTERACAO DA IDADE DO FUNCIONARIO *
-      ********************************************************
+      *************************************************
        ENVIRONMENT                   DIVISION.
        CONFIGURATION                 SECTION.
        SPECIAL-NAMES.
