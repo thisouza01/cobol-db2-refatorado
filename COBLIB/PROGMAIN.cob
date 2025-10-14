@@ -49,11 +49,12 @@
              WHEN 'E'
                    PERFORM 203-EXCLUSAO
              WHEN 'A'
-                   PERFORM 204-ALTERACAO
+                   CALL "ALTERAR" USING WK-ACCEPT,
+                                        WK-EMAILFUN-ACCEPT
              WHEN OTHER
                    DISPLAY 'FUNCAO ' WK-FUNCAO-ACCEPT ' INVALIDA!'
           END-EVALUATE.
-       *
+      *
        202-INCLUSAO.
           MOVE WK-CODFUN-ACCEPT     TO DB2-CODFUN.
           MOVE WK-NOMEFUN-ACCEPT    TO DB2-NOMEFUN-TEXT.
@@ -93,7 +94,7 @@
                    MOVE 12 TO RETURN-CODE
                    STOP RUN
           END-EVALUATE.
-       *
+      *
        203-EXCLUSAO.
           MOVE WK-CODFUN-ACCEPT     TO DB2-CODFUN.
           EXEC SQL
@@ -114,33 +115,6 @@
                    MOVE 12 TO RETURN-CODE
                    STOP RUN
           END-EVALUATE.
-       *
-       204-ALTERACAO.
-          MOVE WK-CODFUN-ACCEPT     TO DB2-CODFUN.
-          IF   WK-NOMEFUN-ACCEPT    NOT = SPACES
-             CALL "ALTNOME" USING DB2-CODFUN,
-                                  WK-NOMEFUN-ACCEPT.
-          END-IF.
-          IF   WK-SALARIOFUN-ACCEPT IS NUMERIC
-             CALL "ALTSALAR" USING DB2-CODFUN,
-                                   WK-SALARIOFUN-ACCEPT.          
-          END-IF.
-          IF   WK-DEPTOFUN-ACCEPT   NOT = SPACES
-             CALL "ALTDEPTO" USING DB2-CODFUN,
-                                   WK-DEPTOFUN-ACCEPT.          
-          END-IF.
-          IF   WK-ADMISSFUN-ACCEPT  NOT = SPACES
-             CALL "ALTADMIS" USING DB2-CODFUN,
-                                   WK-ADMISSFUN-ACCEPT.  
-          END-IF.
-          IF   WK-IDADEFUN-ACCEPT   IS NUMERIC
-             CALL "ALTIDADE" USING DB2-CODFUN,
-                                   WK-IDADEFUN-ACCEPT.  
-          END-IF.
-          IF   WK-EMAILFUN-ACCEPT   NOT = SPACES
-             CALL "ALTEMAIL" USING DB2-CODFUN,
-                                   WK-EMAILFUN-ACCEPT.
-          END-IF.
       *******************************************************
        300-LER-FUNCIONARIOS SECTION.
        301-LER-FUNCIONARIOS.
