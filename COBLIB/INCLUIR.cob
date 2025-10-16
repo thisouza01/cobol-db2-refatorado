@@ -59,7 +59,7 @@
 
           PERFORM TRATA-SQLCODE.
 
-          EVALUATE WS-SQL-STATUS
+          EVALUATE WK-SQL-STATUS
               WHEN 'SUCESSO'
                   EXEC SQL COMMIT END-EXEC                                
                   DISPLAY 'FUNCIONARIO ' DB2-CODFUN 

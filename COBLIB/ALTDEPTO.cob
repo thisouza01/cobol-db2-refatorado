@@ -17,8 +17,9 @@
            EXEC SQL
                INCLUDE BOOKFUNC
            END-EXEC.
-      *
-       77 RETORNO-SQLCODE            PIC -999   VALUE ZEROS.
+
+      * Variáveis de controle SQL 
+       COPY SQLVARS..
       *
        LINKAGE                       SECTION.
        01 LK-DEPTOFUN-ACCEPT         PIC X(03).
@@ -26,7 +27,8 @@
       *
        PROCEDURE                     DIVISION USING LK-CODFUN,
                                                     LK-DEPTOFUN-ACCEPT.
-                                                    
+      * Tratamento de SQLCODE 
+       COPY SQLTREAT.                                                     
       *
        PERFORM ALTERA-DEPARTAMENTO.
        GOBACK.
@@ -38,21 +40,20 @@
                SET DEPTOFUN = :DB2-DEPTOFUN
                    WHERE CODFUN = :LK-CODFUN
            END-EXEC.
-           EVALUATE SQLCODE
-           WHEN 0
+
+            PERFORM TRATA-SQLCODE.
+
+           EVALUATE WK-SQL-STATUS
+           WHEN 'SUCESSO'
+              EXEC SQL COMMIT END-EXEC              
               DISPLAY 'DEPARTAMENTO DO FUNCIONARIO ' LK-CODFUN
                       ' FOI ALTERADO PARA ' DB2-DEPTOFUN
-           WHEN 100
-              DISPLAY 'FUNCIONARIO ' LK-CODFUN
-                      ' NAO EXISTE'
-           WHEN -530
+           WHEN 'NAO-ENCONTRADO'
+              DISPLAY 'ERRO NA VALIDACAO DO CODIGO DO FUNCIONARIO'
+           WHEN 'FK-INVALIDA'
               DISPLAY 'DEPARTAMENTO ' LK-DEPTOFUN-ACCEPT
                       ' NAO EXISTE!'
            WHEN OTHER
-              MOVE SQLCODE TO RETORNO-SQLCODE
-              DISPLAY 'ERRO ' RETORNO-SQLCODE
-                      ' NO COMANDO UPDATE DO DEPARTAMENTO'
-              MOVE 12 TO RETURN-CODE
-              GOBACK
+              CONTINUE
            END-EVALUATE.
       

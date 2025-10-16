@@ -17,8 +17,10 @@
            EXEC SQL
                INCLUDE BOOKFUNC
            END-EXEC.
+
+      * Variáveis de controle SQL 
+       COPY SQLVARS.
       *
-       77  RETORNO-SQLCODE           PIC -999       VALUE ZEROS.
        77  WK-SALARIO-EDIT           PIC ZZZ.ZZ9,99  VALUE ZEROS.
 
       *
@@ -28,7 +30,9 @@
       *
        PROCEDURE                     DIVISION USING LK-CODFUN,
                                                     LK-SALARIOFUN-ACCEPT.
-      *
+      * Tratamento de SQLCODE 
+       COPY SQLTREAT.  
+      *  
        PERFORM ALTERA-SALARIO.
        GOBACK.
       *
@@ -43,18 +47,17 @@
 
            MOVE LK-SALARIOFUN-ACCEPT TO WK-SALARIO-EDIT.
 
-           EVALUATE SQLCODE
-           WHEN 0
+           PERFORM TRATA-SQLCODE.
+
+           EVALUATE WK-SQL-STATUS
+           WHEN 'SUCESSO'
+              EXEC SQL COMMIT END-EXEC              
               DISPLAY 'SALARIO DO FUNCIONARIO ' LK-CODFUN
                       ' FOI ALTERADO PARA ' DB2-SALARIOFUN
-           WHEN 100
-              DISPLAY 'FUNCIONARIO ' LK-CODFUN
-                      ' NAO EXISTE'
+           WHEN 'NAO-ENCONTRADO'
+              DISPLAY 'ERRO NA VALIDACAO DO CODIGO DO FUNCIONARIO'
            WHEN OTHER
-              MOVE SQLCODE TO RETORNO-SQLCODE
-              DISPLAY 'ERRO ' RETORNO-SQLCODE
-                      ' NO COMANDO UPDATE DO SALARIO'
-              MOVE 12 TO RETURN-CODE
-              GOBACK
+              CONTINUE
            END-EVALUATE.
+           
       
