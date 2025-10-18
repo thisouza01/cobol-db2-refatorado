@@ -6,7 +6,7 @@
 
 ## Sobre o Projeto
 
-Este projeto tem como objetivo demonstrar a aplicação de boas práticas no desenvolvimento de aplicações COBOL para mainframe, com foco em modularização, organização e manutenibilidade do código. O sistema implementa operações CRUD (Create, Read, Update, Delete) para gerenciamento de funcionários, utilizando DB2 como banco de dados.
+Este projeto tem como objetivo demonstrar a aplicação de boas práticas no desenvolvimento de aplicações COBOL para mainframe, com foco em modularização, organização e manutenibilidade do código. O sistema implementa operações (Insert, Update, Delete) para gerenciamento de funcionários, utilizando DB2 como banco de dados.
 
 O projeto foi desenvolvido como parte do meu aprendizado em tecnologias mainframe e reflete conceitos modernos de engenharia de software aplicados a ambientes legados.
 
