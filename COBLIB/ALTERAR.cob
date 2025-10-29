@@ -34,25 +34,25 @@
 
            IF   LK-NOMEFUN-ACCEPT    NOT = SPACES
                CALL "ALTNOME" USING DB2-CODFUN,
-                                    LK-NOMEFUN-ACCEPT.
+                                    LK-NOMEFUN-ACCEPT
            END-IF.
            IF   LK-SALARIOFUN-ACCEPT IS NUMERIC
                CALL "ALTSALAR" USING DB2-CODFUN,
-                                     LK-SALARIOFUN-ACCEPT.          
+                                     LK-SALARIOFUN-ACCEPT          
            END-IF.
            IF   LK-DEPTOFUN-ACCEPT   NOT = SPACES
                CALL "ALTDEPTO" USING DB2-CODFUN,
-                                     LK-DEPTOFUN-ACCEPT.          
+                                     LK-DEPTOFUN-ACCEPT         
            END-IF.
            IF   LK-ADMISSFUN-ACCEPT  NOT = SPACES
                CALL "ALTADMIS" USING DB2-CODFUN,
-                                     LK-ADMISSFUN-ACCEPT.  
+                                     LK-ADMISSFUN-ACCEPT  
            END-IF.
            IF   LK-IDADEFUN-ACCEPT   IS NUMERIC
                CALL "ALTIDADE" USING DB2-CODFUN,
-                                     LK-IDADEFUN-ACCEPT.  
+                                     LK-IDADEFUN-ACCEPT  
            END-IF.
            IF   LK-EMAILFUN-ACCEPT   NOT = SPACES
                CALL "ALTEMAIL" USING DB2-CODFUN,
-                                     LK-EMAILFUN-ACCEPT.
+                                     LK-EMAILFUN-ACCEPT
            END-IF.

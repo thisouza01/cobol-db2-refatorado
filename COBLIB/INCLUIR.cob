@@ -11,6 +11,12 @@
        DATA                          DIVISION.
       *
        WORKING-STORAGE               SECTION.
+              EXEC SQL
+                INCLUDE SQLCA
+              END-EXEC.
+              EXEC SQL
+                INCLUDE BOOKFUNC
+              END-EXEC.
       * Variáveis de controle SQL 
        COPY SQLVARS.
       *
@@ -28,10 +34,10 @@
        PROCEDURE                     DIVISION USING LK-ACCEPT,
                                                     LK-EMAILFUN-ACCEPT.
       * Tratamento de SQLCODE 
-       COPY SQLTREAT.                                             
+           COPY SQLTREAT.                                             
       *
-       PERFORM INCLUI-FUNCIONARIO.
-       GOBACK.
+           PERFORM INCLUI-FUNCIONARIO.
+           GOBACK.
       *
        INCLUI-FUNCIONARIO.
           MOVE LK-CODFUN-ACCEPT     TO DB2-CODFUN.
@@ -73,5 +79,6 @@
               WHEN 'NAO-ENCONTRADO'
                   DISPLAY 'ERRO NA VALIDACAO DOS DADOS'
               WHEN OTHER
-                  CONTINUE
+                  EXEC SQL ROLLBACK END-EXEC
+                  STOP RUN
           END-EVALUATE.
