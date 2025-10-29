@@ -31,10 +31,10 @@
        PROCEDURE                     DIVISION USING LK-CODFUN,
                                                     LK-SALARIOFUN-ACCEPT.
       * Tratamento de SQLCODE 
-       COPY SQLTREAT.  
+           COPY SQLTREAT.  
       *  
-       PERFORM ALTERA-SALARIO.
-       GOBACK.
+           PERFORM ALTERA-SALARIO.
+           GOBACK.
       *
        ALTERA-SALARIO.
            MOVE LK-SALARIOFUN-ACCEPT TO DB2-SALARIOFUN-TEXT.
@@ -57,7 +57,8 @@
            WHEN 'NAO-ENCONTRADO'
               DISPLAY 'ERRO NA VALIDACAO DO CODIGO DO FUNCIONARIO'
            WHEN OTHER
-              CONTINUE
+                EXEC SQL ROLLBACK END-EXEC
+                STOP RUN  
            END-EVALUATE.
            
       

@@ -27,10 +27,10 @@
        PROCEDURE                     DIVISION USING LK-CODFUN,
                                                     LK-EMAILFUN-ACCEPT.
       * Tratamento de SQLCODE 
-       COPY SQLTREAT.                                                           
+           COPY SQLTREAT.                                                           
       *
-       PERFORM ALTERA-EMAIL.
-       GOBACK.
+           PERFORM ALTERA-EMAIL.
+           GOBACK.
       *
        ALTERA-EMAIL.
            MOVE LK-EMAILFUN-ACCEPT TO DB2-EMAILFUN-TEXT.
@@ -55,6 +55,7 @@
               WHEN 'NAO-ENCONTRADO'
                   DISPLAY 'ERRO NA VALIDACAO DOS DADOS'            
               WHEN OTHER
-                  CONTINUE
+                    EXEC SQL ROLLBACK END-EXEC
+                    STOP RUN 
            END-EVALUATE.
       

@@ -29,10 +29,10 @@
                                                     LK-IDADEFUN-ACCEPT.
                                                     
       * Tratamento de SQLCODE 
-       COPY SQLTREAT.   
+           COPY SQLTREAT.   
       * 
-       PERFORM ALTERA-IDADE.
-       GOBACK.
+           PERFORM ALTERA-IDADE.
+           GOBACK.
       *
        ALTERA-IDADE.
            MOVE LK-IDADEFUN-ACCEPT TO DB2-IDADEFUN.
@@ -52,6 +52,7 @@
            WHEN 'NAO-ENCONTRADO'
               DISPLAY 'ERRO NA VALIDACAO DO CODIGO DO FUNCIONARIO'
            WHEN OTHER
-              CONTINUE
+                EXEC SQL ROLLBACK END-EXEC
+                STOP RUN
            END-EVALUATE.
       

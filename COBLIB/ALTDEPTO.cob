@@ -19,7 +19,7 @@
            END-EXEC.
 
       * Variáveis de controle SQL 
-       COPY SQLVARS..
+       COPY SQLVARS.
       *
        LINKAGE                       SECTION.
        01 LK-DEPTOFUN-ACCEPT         PIC X(03).
@@ -28,10 +28,10 @@
        PROCEDURE                     DIVISION USING LK-CODFUN,
                                                     LK-DEPTOFUN-ACCEPT.
       * Tratamento de SQLCODE 
-       COPY SQLTREAT.                                                     
+           COPY SQLTREAT.                                                     
       *
-       PERFORM ALTERA-DEPARTAMENTO.
-       GOBACK.
+           PERFORM ALTERA-DEPARTAMENTO.
+           GOBACK.
       *
        ALTERA-DEPARTAMENTO.
            MOVE LK-DEPTOFUN-ACCEPT TO DB2-DEPTOFUN.
@@ -54,6 +54,7 @@
               DISPLAY 'DEPARTAMENTO ' LK-DEPTOFUN-ACCEPT
                       ' NAO EXISTE!'
            WHEN OTHER
-              CONTINUE
+              EXEC SQL ROLLBACK END-EXEC
+              STOP RUN  
            END-EVALUATE.
       

@@ -28,10 +28,10 @@
        PROCEDURE                     DIVISION USING LK-CODFUN,
                                                     LK-NOMEFUN-ACCEPT.
       * Tratamento de SQLCODE 
-       COPY SQLTREAT.   
+           COPY SQLTREAT.   
       * 
-       PERFORM ALTERA-NOME.
-       GOBACK.
+           PERFORM ALTERA-NOME.
+           GOBACK.
       *
        ALTERA-NOME.
            MOVE LK-NOMEFUN-ACCEPT TO DB2-NOMEFUN-TEXT.
@@ -52,6 +52,7 @@
            WHEN 'NAO-ENCONTRADO'
               DISPLAY 'ERRO NA VALIDACAO DO CODIGO DO FUNCIONARIO'
            WHEN OTHER
-              CONTINUE
+                EXEC SQL ROLLBACK END-EXEC
+                STOP RUN  
            END-EVALUATE.
            
