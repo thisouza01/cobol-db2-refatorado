@@ -15,13 +15,7 @@
        DATA DIVISION.
        FILE SECTION.
        WORKING-STORAGE SECTION.
-           EXEC SQL
-              INCLUDE BOOKFUNC
-           END-EXEC.
-           EXEC SQL
-              INCLUDE SQLCA
-           END-EXEC.
-       
+      * 
        COPY CPYACEP.
       *
        PROCEDURE DIVISION.
